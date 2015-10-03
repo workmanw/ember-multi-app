@@ -28,6 +28,7 @@ You can use this section if you want to duplicate this setup without having to c
 * **ALL** apps (app1 and app2) have the same `modulePrefix` set in "config/environment.js".
   - All ES2015 imports use "app" as the prefix, even in "common". Eg: `Import CommonAppMixin from "app/mixins/common";`
 * Each app is configured with a different port (see: "apps/app1/.ember-cli" and "apps/app2/.ember-cli")
+* "apps/common/tests/integration" and "apps/common/tests/unit" are symlinked to "apps/app1/tests/common-integration" and "apps/app1/tests/common-unit" respectfully.
 
 ## Using repo
 
@@ -43,6 +44,18 @@ You can use this section if you want to duplicate this setup without having to c
 
 Each server runs on a different port so you can launch multiple at the same time.
 
+### Testing
+
+You'll notice that there are "apps/common/tests/integration" and "apps/common/tests/unit". These tests relate to the code in the common addon, though due to ember-cli structure, they are not able to run independantly. So you'll find two additional symlinks in "apps/app1/test" for "common-integration" and "common-unit".
+
+Thus common tests get lumped into the first app.
+
+  `./bin/test.sh`
+
+  -- or --
+
+  `./bin/server-app1.sh` and [localhost:4200/tests](http://localhost:4200/tests)
+
 ### Building
 
   `./bin/build.sh`
@@ -55,7 +68,7 @@ Each server runs on a different port so you can launch multiple at the same time
   * Edit "app3/package.json", adding the following (see app1/package.json as example):
   * Edit "app3/.ember-cli" and bump the port number
   * Copy "bin/serve-app1.sh" to "bin/serve-app3.sh"
-  * Edit "bin/install.sh", "bin/build.sh", and "bin/serve-app3.sh". Updates should be obvious.
+  * Edit "bin/install.sh", "bin/build.sh", "bin/test.sh", and "bin/serve-app3.sh". Updates should be obvious.
 
   ```"ember-addon": { "paths": [ "lib/common" ]}```
 
@@ -68,6 +81,4 @@ Each server runs on a different port so you can launch multiple at the same time
   - As mentioned above, all apps must have the same `modulePrefix`.
 * WatchMan
   - You will not be able to use watchman. It has an existing bug that prevents it from properly following symlinks. See: http://www.ember-cli.com/user-guide/#watchman for uninstall details.
-
-## TODOs
-* Testing
+* Tests for common need to run as part of one of your apps. They cannot be easily run independantly.
